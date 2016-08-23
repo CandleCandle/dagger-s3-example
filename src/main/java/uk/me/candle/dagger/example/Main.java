@@ -50,7 +50,7 @@ class BucketPrinter {
     }
 }
 
-@Module(includes = {AwsDepsModule.class})
+@Module(includes = {S3DepsModule.class})
 class S3ListingModule {
     @Provides
     BucketPrinter provideBucketPrinter() {
@@ -58,9 +58,16 @@ class S3ListingModule {
     }
 }
 
+@Module(includes = {AwsDepsModule.class})
+class S3DepsModule {
+    @Provides
+    AmazonS3 provideS3Client(ClientConfiguration clientConfiguration) {
+        return new AmazonS3Client(clientConfiguration);
+    }
+}
+
 @Module
 class AwsDepsModule {
-    
     @Provides
     ClientConfiguration provideClientConfiguration() {
         ClientConfiguration conf = new ClientConfiguration();
@@ -80,10 +87,5 @@ class AwsDepsModule {
             }
         }
         return conf;
-    }
-    
-    @Provides
-    AmazonS3 provideS3Client(ClientConfiguration clientConfiguration) {
-        return new AmazonS3Client(clientConfiguration);
     }
 }
