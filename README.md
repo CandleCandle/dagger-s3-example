@@ -11,6 +11,7 @@ mvn clean install assembly:single
 Running
 -------
 
+Have AWS credentials available as per the [DefaultAWSCredentialsProviderChain](http://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/auth/DefaultAWSCredentialsProviderChain.html)
 ```shell
 java -jar target/*with-dep*.jar
 ```
