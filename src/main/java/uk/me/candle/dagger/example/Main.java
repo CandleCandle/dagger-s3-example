@@ -14,14 +14,13 @@ import javax.inject.Inject;
 public class Main {
 
     public static void main(String[] args) {
-        MainComponent thing = DaggerMainComponent.builder()
-                .awsDepsModule(new AwsDepsModule())
-                .build();
-        thing.s3Lister().run();
+        MainComponent t = DaggerMainComponent
+                .create();
+        t.s3Lister().run();
     }
 }
 
-@Component(modules = {S3ListingModule.class})
+@Component(modules = {S3DepsModule.class})
 interface MainComponent {
     S3Lister s3Lister();
 }
@@ -45,16 +44,10 @@ class S3Lister implements Runnable {
 }
 
 class BucketPrinter {
+    @Inject public BucketPrinter() { }
+
     void printBucket(Bucket b) {
         System.out.println(b.getCreationDate() + " " + b.getName());
-    }
-}
-
-@Module(includes = {S3DepsModule.class})
-class S3ListingModule {
-    @Provides
-    BucketPrinter provideBucketPrinter() {
-        return new BucketPrinter();
     }
 }
 
