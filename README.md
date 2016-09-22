@@ -19,11 +19,16 @@ java -jar target/*with-dep*.jar
 Organisation
 ------------
 
-`@Module` annotated classes provide collections of dependencies. In this example, they each, currently, provide just one dependency each,
+`@Module` annotated classes provide collections of dependencies. They are for classes are not under your control and do not have an `@Inject`-annotated constructor [or @Inject annotated fiends, ewwww!]
 
 There is a dependency tree between each `@Module` annotated class; using the `includes` parameter to the annotation.
 
-The annotations have a rentention policy of RUNTIME, thus, if I were doing a library that may supply dependencies it seems sensible to do a multi-module component with two modules: `library` and `library-module`. The main library would have the expected code and the library-module would provide the @Module annotated classes for the library. That way you don't have to pull in the dagger dependency if you are not using it.
+A `@Component` annotated interface or abstract class takes a list of modules on which it depends.
 
-I'm not (yet) comfortable in having the extra interface `MainComponent` as well as the `S3ListingModule`, it feels like there's two things when there could only be one.
+A Library requires just the javax.inject dependency, as long as the injectable classes are annotated with `@Inject`. If they require classes from a 3rd party library that does not have `@Inject` annotations, then consider making a sibling module that contains the `@Module` and `@Provides` code:
+```
+pom.xml [ ${groupId}:${artifactId}-parent ]
+  |- pom.xml [ ${groupId}:${artifactId} ] depends on javax.inject:javax.inject:1
+  \- pom.xml [ ${groupId}:${artifactId}-modules ] depends on com.google.dagger:dagger:2.x and ${groupId}:${artifactId}
+```
 
